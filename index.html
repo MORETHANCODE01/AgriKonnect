@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-translate="site_title">AgriKonnect - Connect & Grow</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- Supabase Client Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+    <header id="main-header">
+        <button id="burger-menu" aria-label="Toggle Menu"><span></span><span></span><span></span></button>
+        <h1 id="site-logo" data-translate="site_name" style="cursor: pointer;">AgriKonnect</h1>
+        <nav id="main-nav">
+            <ul id="nav-links"></ul>
+            <div class="nav-right">
+                <select id="language-selector" aria-label="Select Language">
+                    <option value="en">English</option> <option value="hi">हिन्दी</option> <option value="kn">ಕನ್ನಡ</option>
+                </select>
+                 <button id="logout-button" class="hidden" data-translate="logout">Logout</button>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Landing Page: Login/Signup -->
+        <section id="landing-page" class="page-section active">
+            <h2 data-translate="welcome_login_signup">Login or Sign Up</h2>
+            <div class="auth-form card">
+                <div class="form-container">
+                     <label for="auth-email" data-translate="email_label">Email:</label>
+                     <input type="email" id="auth-email" required autocomplete="email">
+
+                     <label for="auth-password" data-translate="password_label">Password:</label>
+                     <input type="password" id="auth-password" required autocomplete="current-password">
+
+                     <div class="auth-actions">
+                         <button id="login-btn" class="auth-button" data-translate="login_button">Login</button>
+                         <button id="signup-btn" class="auth-button secondary" data-translate="signup_button">Sign Up</button>
+                     </div>
+                     <p id="auth-error" class="error-message hidden"></p>
+                </div>
+            </div>
+            <p class="auth-note" data-translate="auth_note">(Use a valid email. Confirmation might be needed.)</p>
+        </section>
+
+        <!-- Role Selection Page (Post-Login) -->
+        <section id="role-selection-page" class="page-section hidden">
+            <h2 data-translate="select_your_role">Select Your Role for this Session</h2>
+             <p data-translate="role_selection_desc">Choose how you want to use AgriKonnect today.</p>
+            <div class="role-selection">
+                <button id="select-farmer-btn" class="role-button" data-translate="i_am_farmer">I am a Farmer</button>
+                <button id="select-consumer-btn" class="role-button" data-translate="i_am_consumer">I am a Consumer</button>
+            </div>
+             <p class="auth-note">(Role selection is for the current session.)</p>
+        </section>
+
+        <!-- Farmer Hub -->
+        <section id="farmer-hub" class="page-section hidden">
+            <h2 data-translate="farmer_hub_title">Farmer Hub</h2>
+            <p class="hub-description" data-translate="farmer_hub_desc">Manage listings/resources.</p>
+            <div class="hub-actions">
+                 <button class="hub-button" data-page="sell-crop-page" data-translate="hub_sell_crops">Sell Crops</button>
+                 <button class="hub-button" data-page="rent-out-equipment-page" data-translate="hub_rent_out_equipment">Rent Out Equipment</button>
+                 <button class="hub-button" data-page="my-listings-page" data-translate="hub_my_listings">My Listings</button>
+                 <button class="hub-button" data-page="schemes-page" data-translate="hub_schemes">Govt Schemes</button>
+                 <button class="hub-button" data-page="weather-page" data-translate="hub_weather">Weather</button>
+            </div>
+        </section>
+
+        <!-- Sell Crop Page (Farmer) -->
+        <section id="sell-crop-page" class="page-section hidden">
+            <h2 data-translate="sell_crop_page_title">Sell a Crop</h2>
+            <div class="form-container card">
+                <h3 data-translate="list_crop_title">Crop Details</h3>
+                <form id="add-crop-form">
+                    <label for="crop-name" data-translate="crop_name">Name:</label><input type="text" id="crop-name" required>
+                    <label for="crop-quantity" data-translate="quantity_kg">Qty (kg):</label><input type="number" id="crop-quantity" required min="1">
+                    <label for="crop-price" data-translate="price_per_kg">Price/kg:</label><input type="number" id="crop-price" required min="0" step="0.01">
+                    <label for="crop-image" data-translate="image_url_optional">Img URL:</label><input type="url" id="crop-image">
+                    <button type="submit" data-translate="add_crop_button">Add Listing</button>
+                </form>
+            </div>
+             <button class="back-to-hub" data-page="farmer-hub" data-translate="back_to_hub">← Back</button>
+        </section>
+
+        <!-- Rent Out Equipment Page (Farmer) -->
+        <section id="rent-out-equipment-page" class="page-section hidden">
+            <h2 data-translate="rent_out_equipment_page_title">Rent Out Equipment</h2>
+             <div class="form-container card">
+                <h3 data-translate="list_equipment_title">Equipment Details</h3>
+                <form id="add-equipment-form">
+                    <label for="equip-name" data-translate="equipment_name">Name:</label><input type="text" id="equip-name" required>
+                    <label for="equip-type" data-translate="equipment_type">Type:</label><input type="text" id="equip-type" required>
+                    <label for="equip-rental-price" data-translate="rental_price_per_day">Price/day:</label><input type="number" id="equip-rental-price" required min="0" step="0.01">
+                    <label for="equip-image" data-translate="image_url_optional">Img URL:</label><input type="url" id="equip-image">
+                    <button type="submit" data-translate="add_equipment_button">Add Listing</button>
+                </form>
+            </div>
+             <button class="back-to-hub" data-page="farmer-hub" data-translate="back_to_hub">← Back</button>
+        </section>
+
+        <!-- My Listings Page (Farmer) -->
+        <section id="my-listings-page" class="page-section hidden">
+            <h2 data-translate="my_listings_page_title">My Listings</h2>
+            <div class="my-listings-container card">
+                 <h3 data-translate="my_listed_items">My Items</h3>
+                 <div id="my-listings-farmer-view"><p data-translate="no_listings_yet">...</p></div>
+            </div>
+            <button class="back-to-hub" data-page="farmer-hub" data-translate="back_to_hub">← Back</button>
+        </section>
+
+        <!-- Consumer Hub -->
+        <section id="consumer-hub" class="page-section hidden">
+            <h2 data-translate="consumer_hub_title">Consumer Hub</h2>
+             <p class="hub-description" data-translate="consumer_hub_desc">Find crops.</p>
+             <div class="hub-actions">
+                 <button class="hub-button" data-page="buy-crops-page" data-translate="hub_buy_crops">Buy Crops</button>
+                 <button class="hub-button" data-page="weather-page" data-translate="hub_weather">Weather</button>
+            </div>
+        </section>
+
+        <!-- Buy Crops Page (Consumer) -->
+        <section id="buy-crops-page" class="page-section hidden">
+             <h2 data-translate="buy_crops_page_title">Available Crops</h2>
+             <div class="listings-view card">
+                <h3 data-translate="browse_crops_subtitle">Browse Crops</h3>
+                <div id="crop-listings-consumer-view"><p data-translate="no_crops_available">...</p></div>
+            </div>
+             <button class="back-to-hub" data-page="consumer-hub" data-translate="back_to_hub">← Back</button>
+        </section>
+
+        <!-- Government Schemes Page -->
+        <section id="schemes-page" class="page-section hidden">
+             <h2 data-translate="schemes_title">Govt Schemes</h2>
+             <div class="card"> <h3 data-translate="scheme_1_title">Scheme 1</h3> <p data-translate="scheme_1_desc">...</p> <a href="#" class="learn-more" data-translate="learn_more">...</a></div>
+             <div class="card"> <h3 data-translate="scheme_2_title">Scheme 2</h3> <p data-translate="scheme_2_desc">...</p> <a href="#" class="learn-more" data-translate="learn_more">...</a></div>
+             <button class="back-to-hub" data-page="farmer-hub" data-user-type="farmer" data-translate="back_to_hub">← Back</button>
+             <button class="back-to-hub" data-page="consumer-hub" data-user-type="consumer" data-translate="back_to_hub">← Back</button>
+        </section>
+
+        <!-- Weather Forecast Page -->
+        <section id="weather-page" class="page-section hidden">
+            <h2 data-translate="weather_title">Weather</h2>
+            <div id="weather-info" class="card">
+                 <p><strong data-translate="weather_location_label">Location:</strong> <span id="weather-location" data-translate="weather_loading">Loading...</span></p>
+                 <p><strong data-translate="weather_temp_label">Temperature:</strong> <span id="weather-temp">--</span></p>
+                 <p><strong data-translate="weather_condition_label">Condition:</strong> <span id="weather-condition">--</span></p>
+                 <p><strong data-translate="weather_humidity_label">Humidity:</strong> <span id="weather-humidity">--</span></p>
+                 <p id="weather-error" class="error-message hidden"></p>
+            </div>
+            <button class="back-to-hub" data-page="farmer-hub" data-user-type="farmer" data-translate="back_to_hub">← Back</button>
+            <button class="back-to-hub" data-page="consumer-hub" data-user-type="consumer" data-translate="back_to_hub">← Back</button>
+        </section>
+
+        <!-- Team Page -->
+        <section id="team-page" class="page-section hidden">
+            <h2 data-translate="team_page_title">Meet the Team</h2>
+            <div class="team-intro card"><h3 data-translate="team_name">MoreThanCode</h3><p data-translate="team_description">...</p></div>
+            <div class="team-members">
+                 <div class="team-member card"><h4 data-translate="member1_name">Pratham</h4><a href="https://www.linkedin.com/in/example-pratham" target="_blank" rel="noopener noreferrer" class="linkedin-link"><svg class="linkedin-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24px" height="24px"><path d="M0 0h24v24H0z" fill="none"/><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14zm-7 4H8v10h4V7zm6 0h-4v1.71c-.71-1.21-1.95-2.01-3.5-2.01C8.88 6.7 7 8.48 7 10.94V17h4v-5.11c0-1 .42-1.89 1.5-1.89 1.08 0 1.5.89 1.5 1.89V17h4V10.94c0-2.46-1.88-4.24-4.5-4.24z"/></svg><span data-translate="linkedin_profile">...</span></a></div>
+                 <div class="team-member card"><h4 data-translate="member2_name">Nagga</h4><a href="https://www.linkedin.com/in/example-nagga" target="_blank" rel="noopener noreferrer" class="linkedin-link"><svg class="linkedin-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24px" height="24px"><path d="M0 0h24v24H0z" fill="none"/><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14zm-7 4H8v10h4V7zm6 0h-4v1.71c-.71-1.21-1.95-2.01-3.5-2.01C8.88 6.7 7 8.48 7 10.94V17h4v-5.11c0-1 .42-1.89 1.5-1.89 1.08 0 1.5.89 1.5 1.89V17h4V10.94c0-2.46-1.88-4.24-4.5-4.24z"/></svg><span data-translate="linkedin_profile">...</span></a></div>
+                 <div class="team-member card"><h4 data-translate="member3_name">Das</h4><a href="https://www.linkedin.com/in/example-das" target="_blank" rel="noopener noreferrer" class="linkedin-link"><svg class="linkedin-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24px" height="24px"><path d="M0 0h24v24H0z" fill="none"/><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14zm-7 4H8v10h4V7zm6 0h-4v1.71c-.71-1.21-1.95-2.01-3.5-2.01C8.88 6.7 7 8.48 7 10.94V17h4v-5.11c0-1 .42-1.89 1.5-1.89 1.08 0 1.5.89 1.5 1.89V17h4V10.94c0-2.46-1.88-4.24-4.5-4.24z"/></svg><span data-translate="linkedin_profile">...</span></a></div>
+                 <div class="team-member card"><h4 data-translate="member4_name">Shubham</h4><a href="https://www.linkedin.com/in/example-shubham" target="_blank" rel="noopener noreferrer" class="linkedin-link"><svg class="linkedin-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24px" height="24px"><path d="M0 0h24v24H0z" fill="none"/><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14zm-7 4H8v10h4V7zm6 0h-4v1.71c-.71-1.21-1.95-2.01-3.5-2.01C8.88 6.7 7 8.48 7 10.94V17h4v-5.11c0-1 .42-1.89 1.5-1.89 1.08 0 1.5.89 1.5 1.89V17h4V10.94c0-2.46-1.88-4.24-4.5-4.24z"/></svg><span data-translate="linkedin_profile">...</span></a></div>
+            </div>
+            <button id="back-from-team-btn" class="back-button" data-translate="back_button">← Back</button>
+        </section>
+
+        <!-- Chatbot -->
+        <div id="chatbot-container" class="hidden">
+             <div id="chatbot-header"> <span data-translate="chatbot_title">AgriBot</span> <button id="close-chatbot" aria-label="Close Chatbot">×</button> </div>
+             <div id="chatbot-messages"></div>
+             <div id="chatbot-input"> <input type="text" id="chat-input-field" placeholder="..." data-translate="chat_placeholder"> <button id="chat-send-btn" data-translate="send_button">Send</button> </div>
+        </div>
+        <button id="open-chatbot-btn" class="hidden" aria-label="Open Chatbot"> <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#FFFFFF"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/></svg> </button>
+
+    </main>
+
+    <footer>
+        <p> © <span id="footer-year"></span> AgriKonnect. <span data-translate="footer_rights">All rights reserved.</span> | <span data-translate="made_with_love">Made with</span> ❤️ <span data-translate="by">by</span> <a href="#team-page" id="team-link">MoreThanCode</a>. </p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
